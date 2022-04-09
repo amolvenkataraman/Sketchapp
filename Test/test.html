@@ -14,29 +14,35 @@
             border: 0;
             padding: 0;
             box-sizing: border-box;
+            overflow: hidden;
         }
         .main {
             width: 100vw;
             height: 100vh;
-            background-color: aqua;
         }
 
         .menu-bar {
             width: 100vw;
             height: 12vh;
+            display: flex;
             background-color: burlywood;
         }
         .main-content {
             width: 100vw;
             height: 88vh;
             display: flex;
-            background-color: antiquewhite;
         }
 
         .canvas {
             width: 80%;
             height: 100%;
-            background-color: azure;
+
+            touch-action: none;
+        }
+
+        .drawing-canvas {
+            width: 100%;
+            height: 100%;
         }
 
         .sidebar {
@@ -44,23 +50,307 @@
             height: 100%;
             background-color: aqua;
         }
+
+        .menu-bar-brand {
+            width: 100px;
+        }
+
+        .pen-tools {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: 30px;
+            padding-top: calc((12vh - 60px) / 2);
+        }
+
+        .pen-tool {
+            width: 60px;
+            height: 60px;
+            margin: 2px;
+            border: 1px solid black;
+        }
+
+        .pen-colour-controls {
+            display: flex;
+            flex-wrap: wrap;
+            padding-top: calc((12vh - 88px) / 2);
+        }
+
+        .pen-colour {
+            width: 40px;
+            height: 40px;
+            border: 1px solid black;
+            margin: 2px;
+            outline: 0;
+        }
+
+        .selected {
+            outline: 3px solid #ffffff;
+        }
+
+        .break {
+            flex-basis: 100%;
+            height: 0;
+        }
+
+        .pen-colour-black {
+            background-color: #000000;
+        }
+
+        .pen-colour-blue {
+            background-color: #3165bb;
+        }
+
+        .pen-colour-red {
+            background-color: #ed1b24;
+        }
+
+        .pen-colour-green {
+            background-color: #177c36;
+        }
+
+        .pen-colour-gray {
+            background-color: #808080;
+        }
+
+        .pen-colour-yellow {
+            background-color: #fef200;
+        }
+
+        .pen-colour-orange {
+            background-color: #ff7f00;
+        }
+
+        .pen-colour-purple {
+            background-color: #9966cc;
+        }
+
+        .pen-colour-brown {
+            background-color: #774931;
+        }
+
+        .pen-colour-pink {
+            background-color: #ffa6cc;
+        }
     </style>
+
 </head>
+
 <body>
     <div class="main">
         <div class="menu-bar">
-            .
+            <div class="menu-bar-brand">
+                
+            </div>
+            <div class="pen-tools">
+                <div class="pen-tool selected pen-tool-pen" data-tool="pen" onclick="set_tool(this);">
+                    PEN
+                </div>
+                <div class="pen-tool pen-tool-eraser" data-tool="eraser" onclick="set_tool(this);">
+                    ERASER
+                </div>
+                <div class="pen-tool pen-tool-lasso" data-tool="lasso" onclick="set_tool(this);">
+                    LASSO
+                </div>
+                
+            </div>
+            <div class="pen-colour-controls">
+                <div class="pen-colour selected pen-colour-black" data-colour="#000000" onclick="set_colour(this);">
+
+                </div>
+                <div class="pen-colour pen-colour-blue" data-colour="#3165bb" onclick="set_colour(this);">
+                    
+                </div>
+                <div class="pen-colour pen-colour-red" data-colour="#ed1b24" onclick="set_colour(this);">
+                    
+                </div>
+                <div class="pen-colour pen-colour-green" data-colour="#177c36" onclick="set_colour(this);">
+
+                </div>
+                <div class="pen-colour pen-colour-gray" data-colour="#808080" onclick="set_colour(this);">
+
+                </div>
+                <div class="break"></div>
+                <div class="pen-colour pen-colour-yellow" data-colour="#fef200" onclick="set_colour(this);">
+                    
+                </div>
+                <div class="pen-colour pen-colour-orange" data-colour="#ff7f00" onclick="set_colour(this);">
+
+                </div>
+                <div class="pen-colour pen-colour-purple" data-colour="#9966cc" onclick="set_colour(this);">
+                    
+                </div>
+                <div class="pen-colour pen-colour-brown" data-colour="#774931" onclick="set_colour(this);">
+
+                </div>
+                <div class="pen-colour pen-colour-pink" data-colour="#ffa6cc" onclick="set_colour(this);">
+
+                </div>
+            </div>
+            <div class="pen-size-controls">
+                TODO
+            </div>
         </div>
         <div class="main-content">
             <div class="canvas">
-                <canvas>
+                <canvas class="drawing-canvas">
                     
                 </canvas>
             </div>
             <div class="sidebar">
-
+                
             </div>
         </div>
     </div>
+
+    <script>
+        var canvas = document.querySelector('.drawing-canvas');
+        var context = canvas.getContext("2d");
+
+        var colour = "#000000";
+        var tool = "pen";
+        var inStroke = false;
+        var posLast = { x: 0, y: 0 };
+        var isDrawing = false;
+        var useTilt = false;
+    
+        var EPenButton =
+        {
+            tip: 0x1,		// left mouse, touch contact, pen contact
+            barrel: 0x2,		// right mouse, pen barrel button
+            middle: 0x4,		// middle mouse
+            eraser: 0x20		// pen eraser button
+        };
+        
+        canvas.width = window.innerWidth * 0.8;
+        canvas.height = window.innerHeight * 0.88;
+
+        function set_colour(el) {
+            colour = el.dataset.colour;
+            document.querySelectorAll('.pen-colour').forEach(pc => {
+                pc.classList.remove('selected');
+            });
+            el.classList.add('selected');
+        }
+    
+        function set_tool(el) {
+            tool = el.dataset.tool;
+            document.querySelectorAll('.pen-tool').forEach(pc => {
+                pc.classList.remove('selected');
+            });
+            el.classList.add('selected');
+        }
+    
+        window.addEventListener('load', function () {
+            var events = [
+                'MSPointerDown', 'MSPointerUp', 'MSPointerCancel', 'MSPointerMove', 'MSPointerOver', 'MSPointerOut', 'MSPointerEnter', 'MSPointerLeave', 'MSGotPointerCapture', 'MSLostPointerCapture', 'touchstart', 'touchmove', 'touchend', 'touchenter', 'touchleave', 'touchcancel', 'mouseover', 'mousemove', 'mouseout', 'mouseenter', 'mouseleave', 'mousedown', 'mouseup', 'focus', 'blur', 'click', 'webkitmouseforcewillbegin', 'webkitmouseforcedown', 'webkitmouseforceup', 'webkitmouseforcechanged'
+            ];
+        
+            var pointerEvents = [
+                'pointerdown', 'pointerup', 'pointercancel', 'pointermove', 'pointerover', 'pointerout', 'pointerenter', 'pointerleave', 'gotpointercapture', 'lostpointercapture'
+            ];
+
+            function midpoint(p1, p2) {
+                return {
+                    x: p1.x + (p2.x - p1.x) / 2,
+                    y: p1.y + (p2.y - p1.y) / 2
+                };
+            }
+    
+            draw_event = evt => {
+    
+            }
+    
+            function draw_pointerevent(evt) {
+                //console.log(evt.type);
+                var canvasRect = canvas.getBoundingClientRect();
+                var pos = {
+                    x: evt.clientX - canvasRect.left,
+                    y: evt.clientY - canvasRect.top,
+                }
+                var pressure = evt.pressure;
+                var buttons = evt.buttons;
+                var tilt = { x: evt.tiltX, y: evt.tiltY };
+                var rotate = evt.twist;
+                
+                if (evt.pointerType) {
+                    switch (evt.pointerType) {
+                        case "touch":
+                        pressure = 0.5;
+                        break;
+                        
+                        case "pen":
+                        break;
+                        
+                        case "mouse":
+                        pressure = 0.5;
+                        break;
+                    }
+                    
+                    context.strokeStyle = colour
+                    context.lineWidth = pressure * 10;
+    
+                    switch (evt.type) {
+                        case "pointerdown":
+                            isDrawing = true;
+                            posLast = pos;
+                            break;
+                        
+                        case "pointerup":
+                            isDrawing = false;
+                            break;
+    
+                        case "pointermove":
+                            if (!isDrawing) {
+                                return;
+                            }
+
+                            else if (pressure > 0) {
+                                if (tool == "pen") {
+                                    context.beginPath();
+                                    context.lineCap = "round";
+                                    context.moveTo(posLast.x, posLast.y);
+
+                                    // Draws Bezier curve from context position to midPoint.
+                                    var midPoint = midpoint(posLast, pos);
+                                    context.quadraticCurveTo(posLast.x, posLast.y, midPoint.x, midPoint.y);
+
+                                    // This lineTo call eliminates gaps (but leaves flat lines if stroke
+                                    // is fast enough).
+                                    context.lineTo(pos.x, pos.y);
+                                    context.stroke();
+                                }
+                            }
+    
+                            posLast = pos;
+                            break;
+    
+                        case "pointerenter":
+                            document.body.style.cursor = "crosshair";
+                            break;
+                        
+                        case "pointerleave":
+                            document.body.style.cursor = "default";
+                            break;
+    
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            if (window.PointerEvent) {
+                for (ev of pointerEvents) {
+                    canvas.addEventListener(ev, draw_pointerevent, false);
+                }
+            }
+            else {
+                //for (ev of events) {
+                //    canvas.addEventListener(ev, draw_event, false);
+                //}
+                alert("Your browser does not support pointer events. Support for non-pointer APIs has not been implemented yet.")
+            }
+        }, true);
+    </script>
+
 </body>
 </html>

@@ -231,7 +231,7 @@
                 </canvas>
             </div>
             <div class="sidebar">
-
+                <button onclick="draw_canvas();">Redraw</button>
             </div>
         </div>
     </div>
@@ -247,8 +247,10 @@
         var posLast = { x: 0, y: 0 };
         var isDrawing = false;
         var useTilt = false;
+
         var strokes = [];
         var currstroke = [];
+        var undone = [];
 
         var EPenButton =
         {
@@ -260,6 +262,49 @@
         
         canvas.width = window.innerWidth * 0.8;
         canvas.height = window.innerHeight * 0.88;
+
+        function midpoint(p1, p2) {
+            return {
+                x: p1.x + (p2.x - p1.x) / 2,
+                y: p1.y + (p2.y - p1.y) / 2
+            };
+        }
+
+        function draw_canvas() {
+            context.canvas.width = context.canvas.width;
+            for (stroke of strokes) {
+                context.fillStyle = stroke.colour;
+                context.strokeStyle = stroke.colour;
+                for (i = 0; i < stroke.stroke.length - 1; i++) {
+                    sx = stroke.stroke[i]['x']
+                    sy = stroke.stroke[i]['y']
+                    sw = stroke.stroke[i]['width']
+                    sx1 = stroke.stroke[i+1]['x']
+                    sy1 = stroke.stroke[i+1]['y']
+                    sw1 = stroke.stroke[i+1]['width']
+
+                    context.lineWidth = sw;
+                    context.beginPath();
+                    context.lineCap = "round";
+                    context.moveTo(sx, sy);
+
+                    var midPoint = midpoint(stroke.stroke[i], stroke.stroke[i+1]);
+                    context.quadraticCurveTo(sx, sy, midPoint.x, midPoint.y);
+
+                    context.lineTo(sx1, sy1);
+                    context.stroke();
+
+                    //context.beginPath();
+                    //context.moveTo(sx - sw / 2, sy - sw / 2);
+                    //context.lineTo(sx1 - sw1 / 2, sy1 - sw1 / 2);
+                    //context.lineTo(sx1 + sw1 / 2, sy1 + sw1 / 2);
+                    //context.lineTo(sx + sw / 2, sy + sw / 2);
+                    //context.closePath();
+                    //context.fill();
+                    //context.stroke();
+                }
+            }
+        }
 
         function set_colour(el) {
             colour = el.dataset.colour;
@@ -293,13 +338,6 @@
             var pointerEvents = [
                 'pointerdown', 'pointerup', 'pointercancel', 'pointermove', 'pointerover', 'pointerout', 'pointerenter', 'pointerleave', 'gotpointercapture', 'lostpointercapture'
             ];
-
-            function midpoint(p1, p2) {
-                return {
-                    x: p1.x + (p2.x - p1.x) / 2,
-                    y: p1.y + (p2.y - p1.y) / 2
-                };
-            }
 
             draw_event = evt => {
 
@@ -345,6 +383,7 @@
                             isDrawing = false;
                             strokes.push({stroke: stroke, colour: colour});
                             stroke = [];
+                            draw_canvas();
                             break;
 
                         case "pointermove":
@@ -387,6 +426,7 @@
                 }
             }
 
+
             if (window.PointerEvent) {
                 for (ev of pointerEvents) {
                     canvas.addEventListener(ev, draw_pointerevent, false);
@@ -399,6 +439,23 @@
                 alert("Your browser does not support pointer events. Support for non-pointer APIs has not been implemented yet.")
             }
         }, true);
+
+        document.onkeydown = function (e) {
+            if (e.ctrlKey) {
+                if (e.key == 'z') {
+                    if (strokes.length > 0) {
+                        undone.push(strokes.pop());
+                        draw_canvas();
+                    }
+                }
+                else if (e.key == 'y') {
+                    if (undone.length > 0) {
+                        strokes.push(undone.pop());
+                        draw_canvas();
+                    }
+                }
+            }
+        }
     </script>
 
 </body>

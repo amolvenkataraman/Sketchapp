@@ -6,6 +6,8 @@ const createWindow = () => {
     width: 800,
     height: 600,
   });
+  //win.setMenu(null);
+  win.maximize();
 
   win.loadFile("index.html");
 };

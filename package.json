@@ -1,0 +1,23 @@
+{
+  "name": "sketchapp",
+  "version": "1.0.0",
+  "description": "a OneNote like app, made for school students",
+  "main": "main.js",
+  "scripts": {
+    "test": "test",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amolvenkataraman/Sketchapp.git"
+  },
+  "author": "Amol,Bala,Surya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amolvenkataraman/Sketchapp/issues"
+  },
+  "homepage": "https://github.com/amolvenkataraman/Sketchapp#readme",
+  "devDependencies": {
+    "electron": "^18.0.3"
+  }
+}

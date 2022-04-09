@@ -15,7 +15,7 @@ app.whenReady().then(() => {
 
   // On macOS, the app should not quit even when all windows are closed
   app.on("activate", () => {
-    if (BroswerWindow.getAllWindows().length === 0) {
+    if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
   });

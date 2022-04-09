@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unnamed Note Taking App</title>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pressure/2.2.0/pressure.min.js"></script>
-
     <style>
         html, body {
             margin: 0;
@@ -25,7 +23,7 @@
             width: 100vw;
             height: 12vh;
             display: flex;
-            background-color: burlywood;
+            background-color: #48dbfb;
         }
         .main-content {
             width: 100vw;
@@ -48,7 +46,7 @@
         .sidebar {
             width: 20%;
             height: 100%;
-            background-color: aqua;
+            background-color: #0abde3;
         }
 
         .menu-bar-brand {
@@ -65,14 +63,14 @@
         .pen-tool {
             width: 60px;
             height: 60px;
-            margin: 2px;
-            border: 1px solid black;
+            margin: 5px;
         }
 
         .pen-colour-controls {
             display: flex;
             flex-wrap: wrap;
             padding-top: calc((12vh - 88px) / 2);
+            width: 250px;
         }
 
         .pen-colour {
@@ -131,6 +129,17 @@
         .pen-colour-pink {
             background-color: #ffa6cc;
         }
+
+        .pen-size-controls {
+            display: flex;
+            padding-top: calc((12vh - 60px) / 2);
+        }
+
+        .pen-size {
+            width: 60px;
+            height: 60px;
+            margin: 5px;
+        }
     </style>
 
 </head>
@@ -139,17 +148,23 @@
     <div class="main">
         <div class="menu-bar">
             <div class="menu-bar-brand">
-                
+
             </div>
             <div class="pen-tools">
                 <div class="pen-tool selected pen-tool-pen" data-tool="pen" onclick="set_tool(this);">
-                    PEN
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                        <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                    </svg>
                 </div>
                 <div class="pen-tool pen-tool-eraser" data-tool="eraser" onclick="set_tool(this);">
-                    ERASER
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-eraser" viewBox="0 0 16 16">
+                        <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414l-3.879-3.879zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
+                    </svg>
                 </div>
                 <div class="pen-tool pen-tool-lasso" data-tool="lasso" onclick="set_tool(this);">
-                    LASSO
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-bounding-box-circles" viewBox="0 0 16 16">
+                        <path d="M2 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM0 2a2 2 0 0 1 3.937-.5h8.126A2 2 0 1 1 14.5 3.937v8.126a2 2 0 1 1-2.437 2.437H3.937A2 2 0 1 1 1.5 12.063V3.937A2 2 0 0 1 0 2zm2.5 1.937v8.126c.703.18 1.256.734 1.437 1.437h8.126a2.004 2.004 0 0 1 1.437-1.437V3.937A2.004 2.004 0 0 1 12.063 2.5H3.937A2.004 2.004 0 0 1 2.5 3.937zM14 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM2 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm12 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+                    </svg>
                 </div>
                 
             </div>
@@ -187,17 +202,36 @@
                 </div>
             </div>
             <div class="pen-size-controls">
-                TODO
+                <div class="pen-size pen-size-sm" data-size="2" onclick="set_size(this);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-bounding-box-circles" viewBox="0 0 16 16">
+                        <path d="M 0 0 L 50 50" stroke="black" stroke-width="0.5"/>
+                    </svg>
+                </div>
+                <div class="pen-size selected pen-size-md" data-size="5" onclick="set_size(this);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-bounding-box-circles" viewBox="0 0 16 16">
+                        <path d="M 0 0 L 50 50" stroke="black" stroke-width="1"/>
+                    </svg>
+                </div>
+                <div class="pen-size pen-size-l" data-size="10" onclick="set_size(this);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-bounding-box-circles" viewBox="0 0 16 16">
+                        <path d="M 0 0 L 50 50" stroke="black" stroke-width="3"/>
+                    </svg>
+                </div>
+                <div class="pen-size pen-size-xl" data-size="20" onclick="set_size(this);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-bounding-box-circles" viewBox="0 0 16 16">
+                        <path d="M 0 0 L 50 50" stroke="black" stroke-width="5"/>
+                    </svg>
+                </div>
             </div>
         </div>
         <div class="main-content">
             <div class="canvas">
                 <canvas class="drawing-canvas">
-                    
+
                 </canvas>
             </div>
             <div class="sidebar">
-                
+
             </div>
         </div>
     </div>
@@ -208,11 +242,14 @@
 
         var colour = "#000000";
         var tool = "pen";
+        var size = 5;
         var inStroke = false;
         var posLast = { x: 0, y: 0 };
         var isDrawing = false;
         var useTilt = false;
-    
+        var strokes = [];
+        var currstroke = [];
+
         var EPenButton =
         {
             tip: 0x1,		// left mouse, touch contact, pen contact
@@ -231,7 +268,7 @@
             });
             el.classList.add('selected');
         }
-    
+
         function set_tool(el) {
             tool = el.dataset.tool;
             document.querySelectorAll('.pen-tool').forEach(pc => {
@@ -239,12 +276,20 @@
             });
             el.classList.add('selected');
         }
-    
+
+        function set_size(el) {
+            size = parseInt(el.dataset.size);
+            document.querySelectorAll('.pen-size').forEach(pc => {
+                pc.classList.remove('selected');
+            });
+            el.classList.add('selected');
+        }
+
         window.addEventListener('load', function () {
             var events = [
                 'MSPointerDown', 'MSPointerUp', 'MSPointerCancel', 'MSPointerMove', 'MSPointerOver', 'MSPointerOut', 'MSPointerEnter', 'MSPointerLeave', 'MSGotPointerCapture', 'MSLostPointerCapture', 'touchstart', 'touchmove', 'touchend', 'touchenter', 'touchleave', 'touchcancel', 'mouseover', 'mousemove', 'mouseout', 'mouseenter', 'mouseleave', 'mousedown', 'mouseup', 'focus', 'blur', 'click', 'webkitmouseforcewillbegin', 'webkitmouseforcedown', 'webkitmouseforceup', 'webkitmouseforcechanged'
             ];
-        
+
             var pointerEvents = [
                 'pointerdown', 'pointerup', 'pointercancel', 'pointermove', 'pointerover', 'pointerout', 'pointerenter', 'pointerleave', 'gotpointercapture', 'lostpointercapture'
             ];
@@ -255,11 +300,11 @@
                     y: p1.y + (p2.y - p1.y) / 2
                 };
             }
-    
+
             draw_event = evt => {
-    
+
             }
-    
+
             function draw_pointerevent(evt) {
                 //console.log(evt.type);
                 var canvasRect = canvas.getBoundingClientRect();
@@ -271,34 +316,37 @@
                 var buttons = evt.buttons;
                 var tilt = { x: evt.tiltX, y: evt.tiltY };
                 var rotate = evt.twist;
-                
+
                 if (evt.pointerType) {
                     switch (evt.pointerType) {
                         case "touch":
                         pressure = 0.5;
                         break;
-                        
+
                         case "pen":
                         break;
-                        
+
                         case "mouse":
                         pressure = 0.5;
                         break;
                     }
                     
                     context.strokeStyle = colour
-                    context.lineWidth = pressure * 10;
-    
+                    context.lineWidth = pressure * size;
+
                     switch (evt.type) {
                         case "pointerdown":
                             isDrawing = true;
                             posLast = pos;
+                            stroke = [posLast];
                             break;
-                        
+
                         case "pointerup":
                             isDrawing = false;
+                            strokes.push({stroke: stroke, colour: colour});
+                            stroke = [];
                             break;
-    
+
                         case "pointermove":
                             if (!isDrawing) {
                                 return;
@@ -318,20 +366,21 @@
                                     // is fast enough).
                                     context.lineTo(pos.x, pos.y);
                                     context.stroke();
+                                    stroke.push({x: pos.x, y: pos.y, width: pressure * size});
                                 }
                             }
-    
+
                             posLast = pos;
                             break;
-    
+
                         case "pointerenter":
                             document.body.style.cursor = "crosshair";
                             break;
-                        
+
                         case "pointerleave":
                             document.body.style.cursor = "default";
                             break;
-    
+
                         default:
                             break;
                     }
